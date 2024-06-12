@@ -1,14 +1,21 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QComboBox, QTextEdit, QMEssageBox
+from PyQt6 import uic
+import googletrans
+import textblob
 
-class MainWindow(QMainWindow):
+class MW(QMainWindow):
     def __init__(self):
-        super().__init__()
-        self.setWindowTitle("My PyQt6 App")
-        self.setGeometry(100, 100, 600, 400)
+        super(MW, self).__init__()
+
+        #Load the .ui file 
+        uic.loadUI("translate.ui", self)
+        self.setWindowTitle("Translator APP")
+
+        #Widgets
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = MW()
     window.show()
     sys.exit(app.exec())

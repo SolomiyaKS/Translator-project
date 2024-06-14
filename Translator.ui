@@ -77,6 +77,7 @@ border-radius: 2px;</string>
      <property name="styleSheet">
       <string notr="true">background-color: rgba(255, 255, 255, 30); 
 
+
 </string>
      </property>
      <property name="text">
@@ -139,7 +140,7 @@ border-radius: 2px;</string>
      </property>
      <property name="icon">
       <iconset resource="res.qrc">
-       <normaloff>:/icons/icons/copy.png</normaloff>:/icons/icons/copy.png</iconset>
+       <normaloff>:/icon/pictures/icons/copy.png</normaloff>:/icon/pictures/icons/copy.png</iconset>
      </property>
     </widget>
     <widget class="QTextEdit" name="textEdit_1">
@@ -176,7 +177,7 @@ border-radius: 2px;</string>
      </property>
      <property name="icon">
       <iconset resource="res.qrc">
-       <normaloff>:/icons/icons/recent.png</normaloff>:/icons/icons/recent.png</iconset>
+       <normaloff>:/icon/pictures/icons/recent.png</normaloff>:/icon/pictures/icons/recent.png</iconset>
      </property>
     </widget>
    </widget>

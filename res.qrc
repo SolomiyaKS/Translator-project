@@ -1,6 +1,7 @@
 <RCC>
-  <qresource prefix="icons">
-    <file>icons/recent.png</file>
-    <file>icons/copy.png</file>
+  <qresource prefix="icon">
+    <file>pictures/icons/copy.png</file>
+    <file>pictures/icons/icon.png</file>
+    <file>pictures/icons/recent.png</file>
   </qresource>
 </RCC>

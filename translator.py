@@ -13,7 +13,7 @@ class MW(QMainWindow):
         self.setWindowTitle("Translator APP")
 
         # Set window icon
-        app_icon = QIcon("D:\\Qt_projects\\translator\\icons\\icon.png")
+        app_icon = QIcon("icon.png")
         self.setWindowIcon(app_icon)
 
         # Widgets
@@ -80,7 +80,7 @@ class MW(QMainWindow):
 
             # Save the recent translation
             self.recent_translations.append((words, translated_text))
-            if len(self.recent_translations) > 10:  # Limit to last 10 translations
+            if len(self.recent_translations) > 10: 
                 self.recent_translations.pop(0)
 
         except Exception as e:
@@ -106,7 +106,7 @@ class MW(QMainWindow):
         style = "border: 1px solid rgba(255,255,255,40); border-radius: 2px;"
 
         # Set text color
-        text_color = QColor(255, 255, 255)  # White text color
+        text_color = QColor(255, 255, 255)  
         list_widget.setStyleSheet(f"{style} color: {text_color.name()};")
 
         # Add items to QListWidget
@@ -114,7 +114,6 @@ class MW(QMainWindow):
             item = QListWidgetItem(f"{original} -> {translated}")
             list_widget.addItem(item)
 
-        # Add QListWidget to the dialog window
         layout.addWidget(list_widget)
         dialog.setLayout(layout)
         dialog.exec()

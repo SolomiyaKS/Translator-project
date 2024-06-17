@@ -19,9 +19,9 @@ class MW(QMainWindow):
 
         # Widgets
         self.t_button = self.findChild(QPushButton, "translate_btn")
-        self.c_button = self.findChild(QPushButton, "clear_btn")
+        self.l_button = self.findChild(QPushButton, "clear_btn")
         self.r_button = self.findChild(QPushButton, "recent_btn")
-        self.p_button = self.findChild(QPushButton, "copy_btn")
+        self.c_button = self.findChild(QPushButton, "copy_btn")
 
         self.combo_1 = self.findChild(QComboBox, "comboBox_1")
         self.combo_2 = self.findChild(QComboBox, "comboBox_2")
@@ -29,10 +29,10 @@ class MW(QMainWindow):
         self.txt_1 = self.findChild(QTextEdit, "textEdit_1")
         self.txt_2 = self.findChild(QTextEdit, "textEdit_2")
 
-        self.c_button.clicked.connect(self.clear)
+        self.l_button.clicked.connect(self.clear)
         self.t_button.clicked.connect(self.translate)
         self.r_button.clicked.connect(self.show_recent)
-        self.p_button.clicked.connect(self.copy_text)
+        self.c_button.clicked.connect(self.copy_text)
 
         # Add languages to the combo boxes
         self.languages = LANGUAGES

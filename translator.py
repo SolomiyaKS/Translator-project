@@ -19,7 +19,7 @@ class MW(QMainWindow):
 
         # Widgets
         self.c_button = self.findChild(QPushButton, "clear_btn")
-
+        self.r_button = self.findChild(QPushButton, "recent_btn" )
 
         self.combo_1 = self.findChild(QComboBox, "comboBox_1")
         self.combo_2 = self.findChild(QComboBox, "comboBox_2")
@@ -74,6 +74,7 @@ class MW(QMainWindow):
     def clear(self):
         self.txt_1.setText("")
         self.txt_2.setText("")
+
 
     # Copy translated text to clipboard
     def copy_text(self):
@@ -142,6 +143,11 @@ class MW(QMainWindow):
         clear_action.setShortcut(QKeySequence("Ctrl+L"))
         clear_action.triggered.connect(self.clear)
         self.addAction(clear_action)
+
+        recent_action = QAction(self)
+        recent_action.setShortcut(QKeySequence("Ctrl+R"))
+        recent_action.triggered.connect(self.show_recent)
+        self.addAction(recent_action)
 
     # Save settings when closing the application
     def closeEvent(self, event):

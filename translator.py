@@ -1,8 +1,9 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QComboBox, QTextEdit, QMessageBox, QDialog, QVBoxLayout, QListWidget, QListWidgetItem
-from PyQt6.QtGui import QFont, QColor, QIcon
+from PyQt6.QtGui import QFont, QColor, QIcon, QKeySequence, QAction
 from PyQt6 import uic
 from googletrans import Translator, LANGUAGES
+import json
 
 class MW(QMainWindow):
     def __init__(self):
@@ -17,10 +18,8 @@ class MW(QMainWindow):
         self.setWindowIcon(app_icon)
 
         # Widgets
-        self.t_button = self.findChild(QPushButton, "translate_btn")
         self.c_button = self.findChild(QPushButton, "clear_btn")
-        self.copy_button = self.findChild(QPushButton, "copy_btn")
-        self.recent_button = self.findChild(QPushButton, "recent_btn")
+
 
         self.combo_1 = self.findChild(QComboBox, "comboBox_1")
         self.combo_2 = self.findChild(QComboBox, "comboBox_2")
@@ -28,10 +27,7 @@ class MW(QMainWindow):
         self.txt_1 = self.findChild(QTextEdit, "textEdit_1")
         self.txt_2 = self.findChild(QTextEdit, "textEdit_2")
 
-        self.t_button.clicked.connect(self.translate)
         self.c_button.clicked.connect(self.clear)
-        self.copy_button.clicked.connect(self.copy_text)
-        self.recent_button.clicked.connect(self.show_recent)
 
         # Add languages to the combo boxes
         self.languages = LANGUAGES
@@ -43,20 +39,41 @@ class MW(QMainWindow):
         self.combo_1.addItems(self.language_list)
         self.combo_2.addItems(self.language_list) 
 
-        # Set default combo item 
-        self.combo_1.setCurrentText("english")
-        self.combo_2.setCurrentText("german")
+        # Load settings
+        self.load_settings()
 
         # List to store recent translations
         self.recent_translations = []
+
+        # Hotkeys
+        self.init_shortcuts()
+
+    # Save settings
+    def save_settings(self):
+        settings = {
+            'combo_1': self.combo_1.currentText(),
+            'combo_2': self.combo_2.currentText(),
+            'window_size': self.size().toTuple()
+        }
+        with open('settings.json', 'w') as f:
+            json.dump(settings, f)
+
+    # Load settings
+    def load_settings(self):
+        try:
+            with open('settings.json', 'r') as f:
+                settings = json.load(f)
+                self.combo_1.setCurrentText(settings.get('combo_1', 'english'))
+                self.combo_2.setCurrentText(settings.get('combo_2', 'german'))
+                self.resize(*settings.get('window_size', (800, 600)))
+        except FileNotFoundError:
+            self.combo_1.setCurrentText("english")
+            self.combo_2.setCurrentText("german")
 
     # Clear the textboxes
     def clear(self):
         self.txt_1.setText("")
         self.txt_2.setText("")
-        
-        self.combo_1.setCurrentText("english")
-        self.combo_2.setCurrentText("german")
 
     # Copy translated text to clipboard
     def copy_text(self):
@@ -117,6 +134,19 @@ class MW(QMainWindow):
         layout.addWidget(list_widget)
         dialog.setLayout(layout)
         dialog.exec()
+
+    # Initialize keyboard shortcuts
+    def init_shortcuts(self):
+
+        clear_action = QAction(self)
+        clear_action.setShortcut(QKeySequence("Ctrl+L"))
+        clear_action.triggered.connect(self.clear)
+        self.addAction(clear_action)
+
+    # Save settings when closing the application
+    def closeEvent(self, event):
+        self.save_settings()
+        event.accept()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -18,8 +18,10 @@ class MW(QMainWindow):
         self.setWindowIcon(app_icon)
 
         # Widgets
+        self.t_button = self.findChild(QPushButton, "translate_btn")
         self.c_button = self.findChild(QPushButton, "clear_btn")
-        self.r_button = self.findChild(QPushButton, "recent_btn" )
+        self.r_button = self.findChild(QPushButton, "recent_btn")
+        self.p_button = self.findChild(QPushButton, "copy_btn")
 
         self.combo_1 = self.findChild(QComboBox, "comboBox_1")
         self.combo_2 = self.findChild(QComboBox, "comboBox_2")
@@ -28,6 +30,9 @@ class MW(QMainWindow):
         self.txt_2 = self.findChild(QTextEdit, "textEdit_2")
 
         self.c_button.clicked.connect(self.clear)
+        self.t_button.clicked.connect(self.translate)
+        self.r_button.clicked.connect(self.show_recent)
+        self.p_button.clicked.connect(self.copy_text)
 
         # Add languages to the combo boxes
         self.languages = LANGUAGES
@@ -37,7 +42,7 @@ class MW(QMainWindow):
 
         # Add items to combo boxes
         self.combo_1.addItems(self.language_list)
-        self.combo_2.addItems(self.language_list) 
+        self.combo_2.addItems(self.language_list)
 
         # Load settings
         self.load_settings()
@@ -53,7 +58,8 @@ class MW(QMainWindow):
         settings = {
             'combo_1': self.combo_1.currentText(),
             'combo_2': self.combo_2.currentText(),
-            'window_size': self.size().toTuple()
+            'window_width': self.width(),
+            'window_height': self.height()
         }
         with open('settings.json', 'w') as f:
             json.dump(settings, f)
@@ -65,16 +71,15 @@ class MW(QMainWindow):
                 settings = json.load(f)
                 self.combo_1.setCurrentText(settings.get('combo_1', 'english'))
                 self.combo_2.setCurrentText(settings.get('combo_2', 'german'))
-                self.resize(*settings.get('window_size', (800, 600)))
+                self.resize(settings.get('window_width', 800), settings.get('window_height', 600))
         except FileNotFoundError:
             self.combo_1.setCurrentText("english")
             self.combo_2.setCurrentText("german")
 
     # Clear the textboxes
     def clear(self):
-        self.txt_1.setText("")
-        self.txt_2.setText("")
-
+        self.txt_1.clear()
+        self.txt_2.clear()
 
     # Copy translated text to clipboard
     def copy_text(self):
@@ -98,7 +103,7 @@ class MW(QMainWindow):
 
             # Save the recent translation
             self.recent_translations.append((words, translated_text))
-            if len(self.recent_translations) > 10: 
+            if len(self.recent_translations) > 10:
                 self.recent_translations.pop(0)
 
         except Exception as e:
@@ -124,7 +129,7 @@ class MW(QMainWindow):
         style = "border: 1px solid rgba(255,255,255,40); border-radius: 2px;"
 
         # Set text color
-        text_color = QColor(255, 255, 255)  
+        text_color = QColor(255, 255, 255)
         list_widget.setStyleSheet(f"{style} color: {text_color.name()};")
 
         # Add items to QListWidget
@@ -138,7 +143,6 @@ class MW(QMainWindow):
 
     # Initialize keyboard shortcuts
     def init_shortcuts(self):
-
         clear_action = QAction(self)
         clear_action.setShortcut(QKeySequence("Ctrl+L"))
         clear_action.triggered.connect(self.clear)
@@ -148,6 +152,16 @@ class MW(QMainWindow):
         recent_action.setShortcut(QKeySequence("Ctrl+R"))
         recent_action.triggered.connect(self.show_recent)
         self.addAction(recent_action)
+
+        translate_action = QAction(self)
+        translate_action.setShortcut(QKeySequence("Ctrl+T"))
+        translate_action.triggered.connect(self.translate)
+        self.addAction(translate_action)
+
+        copy_action = QAction(self)
+        copy_action.setShortcut(QKeySequence("Ctr+C"))
+        copy_action.triggered.connect(self.copy_text)
+        self.addAction(copy_action)
 
     # Save settings when closing the application
     def closeEvent(self, event):

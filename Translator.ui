@@ -14,9 +14,7 @@
    <string>Translator</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: #111827;
-
-</string>
+   <string notr="true">background-color: rgb(162,162,162, 40);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QFrame" name="languages">
@@ -48,6 +46,18 @@ border-radius: 2px;</string>
        <height>21</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">
+        QComboBox {
+          background-color: rgba(162,162,162, 30); 
+          border: 1px solid rgba(162,162,162, 40);
+          border-radius: 2px;
+        }
+        QComboBox:focus {
+          border: 2px solid #00bfff;
+        }
+      </string>
+     </property>
     </widget>
     <widget class="QComboBox" name="comboBox_2">
      <property name="geometry">
@@ -58,27 +68,36 @@ border-radius: 2px;</string>
        <height>21</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">
+        QComboBox {
+          background-color: rgba(162,162,162, 30); 
+          border: 1px solid rgba(162,162,162, 40);
+          border-radius: 2px;
+        }
+        QComboBox:focus {
+          border: 2px solid #00bfff;
+        }
+      </string>
+     </property>
     </widget>
     <widget class="QPushButton" name="translate_btn">
      <property name="geometry">
       <rect>
        <x>270</x>
-       <y>80</y>
+       <y>73</y>
        <width>111</width>
-       <height>24</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>Arial</family>
-       <pointsize>16</pointsize>
+       <pointsize>14</pointsize>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(255, 255, 255, 30); 
-
-
-</string>
+      <string notr="true">background-color: rgba(162,162,162, 30);</string>
      </property>
      <property name="text">
       <string>Translate</string>
@@ -99,9 +118,16 @@ border-radius: 2px;</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(255, 255, 255, 30); 
-border: 1px solid rgba(255,255,255,40);
-border-radius: 2px;</string>
+      <string notr="true">
+        QTextEdit {
+          background-color: rgba(162,162,162, 30); 
+          border: 1px solid rgba(162,162,162,40);
+          border-radius: 2px;
+        }
+        QTextEdit:focus {
+          border: 2px solid #00bfff;
+        }
+      </string>
      </property>
     </widget>
     <widget class="QPushButton" name="clear_btn">
@@ -113,9 +139,13 @@ border-radius: 2px;</string>
        <height>24</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(255, 255, 255, 30); 
-</string>
+      <string notr="true">background-color: rgba(162,162,162, 30);</string>
      </property>
      <property name="text">
       <string>Clear</string>
@@ -131,9 +161,16 @@ border-radius: 2px;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(255, 255, 255, 30); 
-border: 1px solid rgba(255,255,255,40);
-border-radius: 2px;</string>
+      <string notr="true">
+        QPushButton {
+          background-color: rgba(255, 255, 255, 30); 
+          border: 1px solid rgba(255,255,255,40);
+          border-radius: 2px;
+        }
+        QPushButton:focus {
+          border: 2px solid #00bfff;
+        }
+      </string>
      </property>
      <property name="text">
       <string/>
@@ -158,9 +195,16 @@ border-radius: 2px;</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(255, 255, 255, 30); 
-border: 1px solid rgba(255,255,255,40);
-border-radius: 2px;</string>
+      <string notr="true">
+        QTextEdit {
+          background-color: rgba(162,162,162, 30); 
+          border: 1px solid rgba(162,162,162,40);
+          border-radius: 2px;
+        }
+        QTextEdit:focus {
+          border: 2px solid #00bfff;
+        }
+      </string>
      </property>
     </widget>
     <widget class="QPushButton" name="recent_btn">

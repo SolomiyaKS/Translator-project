@@ -14,35 +14,32 @@ class MW(QMainWindow):
         self.setWindowTitle("Translator APP")
 
         # Set window icon
-        app_icon = QIcon("icon.png")
-        self.setWindowIcon(app_icon)
+        self.setWindowIcon(QIcon("icon.png"))
 
         # Widgets
         self.t_button = self.findChild(QPushButton, "translate_btn")
-        self.c_button = self.findChild(QPushButton, "clear_btn")
+        self.l_button = self.findChild(QPushButton, "clear_btn")
         self.r_button = self.findChild(QPushButton, "recent_btn")
-        self.p_button = self.findChild(QPushButton, "copy_btn")
-
+        self.c_button = self.findChild(QPushButton, "copy_btn")
         self.combo_1 = self.findChild(QComboBox, "comboBox_1")
         self.combo_2 = self.findChild(QComboBox, "comboBox_2")
-
         self.txt_1 = self.findChild(QTextEdit, "textEdit_1")
         self.txt_2 = self.findChild(QTextEdit, "textEdit_2")
 
-        self.c_button.clicked.connect(self.clear)
+        # Connect signals to slots
+        self.l_button.clicked.connect(self.clear)
         self.t_button.clicked.connect(self.translate)
         self.r_button.clicked.connect(self.show_recent)
-        self.p_button.clicked.connect(self.copy_text)
+        self.c_button.clicked.connect(self.copy_text)
 
         # Add languages to the combo boxes
         self.languages = LANGUAGES
-
-        # Convert to list
         self.language_list = list(self.languages.values())
-
-        # Add items to combo boxes
         self.combo_1.addItems(self.language_list)
         self.combo_2.addItems(self.language_list)
+
+        # Make textEdit_2 read-only
+        self.txt_2.setReadOnly(True)
 
         # Load settings
         self.load_settings()
@@ -50,21 +47,17 @@ class MW(QMainWindow):
         # List to store recent translations
         self.recent_translations = []
 
-        # Hotkeys
+        # Initialize keyboard shortcuts
         self.init_shortcuts()
 
-    # Save settings
     def save_settings(self):
         settings = {
-            'combo_1': self.combo_1.currentText(),
-            'combo_2': self.combo_2.currentText(),
             'window_width': self.width(),
             'window_height': self.height()
         }
         with open('settings.json', 'w') as f:
             json.dump(settings, f)
 
-    # Load settings
     def load_settings(self):
         try:
             with open('settings.json', 'r') as f:
@@ -76,94 +69,59 @@ class MW(QMainWindow):
             self.combo_1.setCurrentText("english")
             self.combo_2.setCurrentText("german")
 
-    # Clear the textboxes
     def clear(self):
         self.txt_1.clear()
         self.txt_2.clear()
 
-    # Copy translated text to clipboard
     def copy_text(self):
-        clipboard = QApplication.clipboard()
-        clipboard.setText(self.txt_2.toPlainText())
+        QApplication.clipboard().setText(self.txt_2.toPlainText())
 
-    # Translate the text
     def translate(self):
         try:
             translator = Translator()
-
-            # Get original language Key
-            from_language_key = [key for key, value in self.languages.items() if value == self.combo_1.currentText()][0]
-            # Get translated language Key
-            to_language_key = [key for key, value in self.languages.items() if value == self.combo_2.currentText()][0]
-
-            # Translate text
+            from_language_key = next(key for key, value in self.languages.items() if value == self.combo_1.currentText())
+            to_language_key = next(key for key, value in self.languages.items() if value == self.combo_2.currentText())
             words = self.txt_1.toPlainText()
             translated_text = translator.translate(words, src=from_language_key, dest=to_language_key).text
             self.txt_2.setText(translated_text)
-
-            # Save the recent translation
-            self.recent_translations.append((words, translated_text))
-            if len(self.recent_translations) > 10:
-                self.recent_translations.pop(0)
-
+            self.save_recent_translation(words, translated_text)
         except Exception as e:
             QMessageBox.about(self, "Translator", str(e))
 
-    # Show recent translations
+    def save_recent_translation(self, original, translated):
+        if not self.recent_translations or self.recent_translations[-1] != (original, translated):
+            self.recent_translations.append((original, translated))
+            if len(self.recent_translations) > 10:
+                self.recent_translations.pop(0)
+
     def show_recent(self):
-        # Show recent translations in a dialog window
         dialog = QDialog(self)
         dialog.setWindowTitle("Recent Translations")
         dialog.setGeometry(450, 200, 400, 200)
         layout = QVBoxLayout()
-
-        # Create QListWidget for displaying translations
         list_widget = QListWidget()
-
-        # Set text style
         font = QFont()
-        font.setPointSize(14)  # Font size 14px
+        font.setPointSize(14)
         list_widget.setFont(font)
-
-        # Set border radius for the list widget
-        style = "border: 1px solid rgba(255,255,255,40); border-radius: 2px;"
-
-        # Set text color
-        text_color = QColor(255, 255, 255)
-        list_widget.setStyleSheet(f"{style} color: {text_color.name()};")
-
-        # Add items to QListWidget
+        list_widget.setStyleSheet("border: 2px solid rgba(162,162,162,40); border-radius: 2px; color: black;")
         for original, translated in self.recent_translations:
-            item = QListWidgetItem(f"{original} -> {translated}")
-            list_widget.addItem(item)
-
+            list_widget.addItem(QListWidgetItem(f"{original} -> {translated}"))
         layout.addWidget(list_widget)
         dialog.setLayout(layout)
         dialog.exec()
 
-    # Initialize keyboard shortcuts
     def init_shortcuts(self):
-        clear_action = QAction(self)
-        clear_action.setShortcut(QKeySequence("Ctrl+L"))
-        clear_action.triggered.connect(self.clear)
-        self.addAction(clear_action)
+        self.create_shortcut("Ctrl+L", self.clear)
+        self.create_shortcut("Ctrl+R", self.show_recent)
+        self.create_shortcut("Ctrl+T", self.translate)
+        self.create_shortcut("Ctrl+C", self.copy_text)
 
-        recent_action = QAction(self)
-        recent_action.setShortcut(QKeySequence("Ctrl+R"))
-        recent_action.triggered.connect(self.show_recent)
-        self.addAction(recent_action)
+    def create_shortcut(self, key_sequence, callback):
+        action = QAction(self)
+        action.setShortcut(QKeySequence(key_sequence))
+        action.triggered.connect(callback)
+        self.addAction(action)
 
-        translate_action = QAction(self)
-        translate_action.setShortcut(QKeySequence("Ctrl+T"))
-        translate_action.triggered.connect(self.translate)
-        self.addAction(translate_action)
-
-        copy_action = QAction(self)
-        copy_action.setShortcut(QKeySequence("Ctr+C"))
-        copy_action.triggered.connect(self.copy_text)
-        self.addAction(copy_action)
-
-    # Save settings when closing the application
     def closeEvent(self, event):
         self.save_settings()
         event.accept()

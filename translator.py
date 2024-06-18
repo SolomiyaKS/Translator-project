@@ -21,12 +21,19 @@ class MW(QMainWindow):
         self.l_button = self.findChild(QPushButton, "clear_btn")
         self.r_button = self.findChild(QPushButton, "recent_btn")
         self.c_button = self.findChild(QPushButton, "copy_btn")
+<<<<<<< HEAD
+=======
+
+>>>>>>> 109d9375768b42f07938c46aac46e085f2ea54d1
         self.combo_1 = self.findChild(QComboBox, "comboBox_1")
         self.combo_2 = self.findChild(QComboBox, "comboBox_2")
         self.txt_1 = self.findChild(QTextEdit, "textEdit_1")
         self.txt_2 = self.findChild(QTextEdit, "textEdit_2")
 
+<<<<<<< HEAD
         # Connect signals to slots
+=======
+>>>>>>> 109d9375768b42f07938c46aac46e085f2ea54d1
         self.l_button.clicked.connect(self.clear)
         self.t_button.clicked.connect(self.translate)
         self.r_button.clicked.connect(self.show_recent)

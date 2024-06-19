@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QComboBox, QTextEdit, QMessageBox, QDialog, QVBoxLayout, QListWidget, QListWidgetItem
-from PyQt6.QtGui import QFont, QColor, QIcon, QKeySequence, QAction
+from PyQt6.QtGui import QFont, QIcon, QKeySequence, QAction
 from PyQt6 import uic
 from googletrans import Translator, LANGUAGES
 import json
@@ -21,23 +21,18 @@ class MW(QMainWindow):
         self.l_button = self.findChild(QPushButton, "clear_btn")
         self.r_button = self.findChild(QPushButton, "recent_btn")
         self.c_button = self.findChild(QPushButton, "copy_btn")
-<<<<<<< HEAD
-=======
-
->>>>>>> 109d9375768b42f07938c46aac46e085f2ea54d1
+        self.theme_button = self.findChild(QPushButton, "theme")
         self.combo_1 = self.findChild(QComboBox, "comboBox_1")
         self.combo_2 = self.findChild(QComboBox, "comboBox_2")
         self.txt_1 = self.findChild(QTextEdit, "textEdit_1")
         self.txt_2 = self.findChild(QTextEdit, "textEdit_2")
 
-<<<<<<< HEAD
         # Connect signals to slots
-=======
->>>>>>> 109d9375768b42f07938c46aac46e085f2ea54d1
         self.l_button.clicked.connect(self.clear)
         self.t_button.clicked.connect(self.translate)
         self.r_button.clicked.connect(self.show_recent)
         self.c_button.clicked.connect(self.copy_text)
+        self.theme_button.clicked.connect(self.toggle_theme)  # Connect the theme button
 
         # Add languages to the combo boxes
         self.languages = LANGUAGES
@@ -48,11 +43,11 @@ class MW(QMainWindow):
         # Make textEdit_2 read-only
         self.txt_2.setReadOnly(True)
 
-        # Load settings
-        self.load_settings()
-
         # List to store recent translations
         self.recent_translations = []
+
+        # Load settings
+        self.load_settings()
 
         # Initialize keyboard shortcuts
         self.init_shortcuts()
@@ -60,7 +55,10 @@ class MW(QMainWindow):
     def save_settings(self):
         settings = {
             'window_width': self.width(),
-            'window_height': self.height()
+            'window_height': self.height(),
+            'combo_1': self.combo_1.currentText(),
+            'combo_2': self.combo_2.currentText(),
+            'theme': self.theme  # Save the current theme
         }
         with open('settings.json', 'w') as f:
             json.dump(settings, f)
@@ -72,9 +70,13 @@ class MW(QMainWindow):
                 self.combo_1.setCurrentText(settings.get('combo_1', 'english'))
                 self.combo_2.setCurrentText(settings.get('combo_2', 'german'))
                 self.resize(settings.get('window_width', 800), settings.get('window_height', 600))
+                self.theme = settings.get('theme', 'light')  # Load the theme
+                self.apply_theme()
         except FileNotFoundError:
             self.combo_1.setCurrentText("english")
             self.combo_2.setCurrentText("german")
+            self.theme = 'light'
+            self.apply_theme()
 
     def clear(self):
         self.txt_1.clear()
@@ -128,6 +130,45 @@ class MW(QMainWindow):
         action.setShortcut(QKeySequence(key_sequence))
         action.triggered.connect(callback)
         self.addAction(action)
+
+    def toggle_theme(self):
+        if self.theme == 'light':
+            self.theme = 'dark'
+        else:
+            self.theme = 'light'
+        self.apply_theme()
+
+    def apply_theme(self):
+        if self.theme == 'light':
+            self.setStyleSheet("""
+                QMainWindow {
+                    background-color: rgb(255, 255, 255);
+                }
+                QTextEdit, QComboBox, QPushButton, QListWidget {
+                    background-color: rgba(162, 162, 162, 30);
+                    color: black;
+                    border: 1px solid rgba(162, 162, 162, 40);
+                    border-radius: 2px;
+                }
+                QTextEdit:focus, QComboBox:focus, QPushButton:focus {
+                    border: 2px solid #00bfff;
+                }
+            """)
+        else:
+            self.setStyleSheet("""
+                QMainWindow {
+                    background-color: rgb(53, 53, 53);
+                }
+                QTextEdit, QComboBox, QPushButton, QListWidget {
+                    background-color: rgba(42, 42, 42, 30);
+                    color: white;
+                    border: 1px solid rgba(42, 42, 42, 40);
+                    border-radius: 2px;
+                }
+                QTextEdit:focus, QComboBox:focus, QPushButton:focus {
+                    border: 2px solid #00bfff;
+                }
+            """)
 
     def closeEvent(self, event):
         self.save_settings()

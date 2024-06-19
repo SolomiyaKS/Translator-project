@@ -14,7 +14,7 @@
    <string>Translator</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(162,162,162, 40);</string>
+   <string notr="true">background-color: rgba(162,162,162, 40);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QFrame" name="languages">
@@ -222,6 +222,19 @@ border-radius: 2px;</string>
      <property name="icon">
       <iconset resource="res.qrc">
        <normaloff>:/icon/pictures/icons/recent.png</normaloff>:/icon/pictures/icons/recent.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="theme">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>10</y>
+       <width>21</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>*</string>
      </property>
     </widget>
    </widget>

@@ -177,7 +177,7 @@ border-radius: 2px;</string>
      </property>
      <property name="icon">
       <iconset resource="res.qrc">
-       <normaloff>:/icon/pictures/icons/copy.png</normaloff>:/icon/pictures/icons/copy.png</iconset>
+       <normaloff>:/icon/resource/copy.png</normaloff>:/icon/resource/copy.png</iconset>
      </property>
     </widget>
     <widget class="QTextEdit" name="textEdit_1">
@@ -221,7 +221,7 @@ border-radius: 2px;</string>
      </property>
      <property name="icon">
       <iconset resource="res.qrc">
-       <normaloff>:/icon/pictures/icons/recent.png</normaloff>:/icon/pictures/icons/recent.png</iconset>
+       <normaloff>:/resources/recent.png</normaloff>:/resources/recent.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="theme">

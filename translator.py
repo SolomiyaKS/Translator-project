@@ -32,7 +32,7 @@ class MW(QMainWindow):
         self.t_button.clicked.connect(self.translate)
         self.r_button.clicked.connect(self.show_recent)
         self.c_button.clicked.connect(self.copy_text)
-        self.theme_button.clicked.connect(self.toggle_theme)  # Connect the theme button
+        self.theme_button.clicked.connect(self.toggle_theme)
 
         # Add languages to the combo boxes
         self.languages = LANGUAGES
@@ -52,13 +52,16 @@ class MW(QMainWindow):
         # Initialize keyboard shortcuts
         self.init_shortcuts()
 
+        # Auto-detect language when text changes in textEdit_1
+        self.txt_1.textChanged.connect(self.auto_detect_language)
+
     def save_settings(self):
         settings = {
             'window_width': self.width(),
             'window_height': self.height(),
             'combo_1': self.combo_1.currentText(),
             'combo_2': self.combo_2.currentText(),
-            'theme': self.theme  # Save the current theme
+            'theme': self.theme
         }
         with open('settings.json', 'w') as f:
             json.dump(settings, f)
@@ -70,7 +73,7 @@ class MW(QMainWindow):
                 self.combo_1.setCurrentText(settings.get('combo_1', 'english'))
                 self.combo_2.setCurrentText(settings.get('combo_2', 'german'))
                 self.resize(settings.get('window_width', 800), settings.get('window_height', 600))
-                self.theme = settings.get('theme', 'light')  # Load the theme
+                self.theme = settings.get('theme', 'light')
                 self.apply_theme()
         except FileNotFoundError:
             self.combo_1.setCurrentText("english")
@@ -169,6 +172,17 @@ class MW(QMainWindow):
                     border: 2px solid #00bfff;
                 }
             """)
+
+    def auto_detect_language(self):
+        try:
+            translator = Translator()
+            words = self.txt_1.toPlainText()
+            if words.strip():  # If there is text
+                detected_lang = translator.detect(words).lang
+                lang_name = self.languages.get(detected_lang, 'english')  # Default to English if not found
+                self.combo_1.setCurrentText(lang_name)
+        except Exception as e:
+            QMessageBox.about(self, "Language Detection", str(e))
 
     def closeEvent(self, event):
         self.save_settings()
